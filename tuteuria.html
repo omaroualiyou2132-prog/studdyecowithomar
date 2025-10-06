@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyEcoWithOmar</title>
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Lora for titles, Inter for body text -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@700&display=swap" rel="stylesheet">
+    
+    <!-- Custom Configuration for our Design System -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                        'serif': ['Lora', 'serif'],
+                    },
+                    colors: {
+                        'baceco-dark-blue': '#1A237E',
+                        'baceco-green': '#004D40',
+                        'baceco-teal': '#00BFA5',
+                        'baceco-gold': '#FFAB00',
+                        'baceco-light-bg': '#F7F9FC',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Simple transition for page visibility */
+        .page { transition: opacity 0.3s ease-in-out; }
+        .hidden { display: none; }
+        /* Typing animation */
+        .typing-dot {
+            animation: typing-blink 1.4s infinite both;
+        }
+        @keyframes typing-blink {
+            0% { opacity: .2; }
+            20% { opacity: 1; }
+            100% { opacity: .2; }
+        }
+        .typing-dot:nth-child(2) { animation-delay: .2s; }
+        .typing-dot:nth-child(3) { animation-delay: .4s; }
+        
+        /* Quiz button styles */
+        .quiz-option {
+            transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+        }
+        /* Table styles */
+        .bot-message table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+        .bot-message th, .bot-message td {
+            border: 1px solid #e2e8f0;
+            padding: 0.75rem 1rem;
+            text-align: left;
+        }
+        .bot-message th {
+            background-color: #edf2f7;
+            font-weight: 600;
+        }
+        .bot-message tr:nth-child(even) {
+            background-color: #f7fafc;
+        }
+    </style>
+</head>
+<body class="bg-baceco-light-bg font-sans">
+
+    <div id="app">
+
+        <!-- =================================================================== -->
+        <!--  1. LANDING PAGE (/ page)                                           -->
+        <!-- =================================================================== -->
+        <div id="page-landing" class="page">
+            <header class="bg-white shadow-sm p-4">
+                <nav class="container mx-auto flex justify-between items-center">
+                    <h1 class="text-2xl font-bold font-serif text-baceco-dark-blue">StudyEcoWithOmar</h1>
+                    <div>
+                        <button data-navigate="page-about" class="text-baceco-dark-blue hover:underline mr-6 font-semibold">À Propos</button>
+                        <button data-navigate="page-login" class="bg-baceco-dark-blue text-white font-bold py-2 px-5 rounded-lg hover:bg-opacity-90 transition-colors">Connexion</button>
+                    </div>
+                </nav>
+            </header>
+            
+            <main class="container mx-auto px-6 py-16 text-center">
+                <!-- Hero Section -->
+                <section>
+                    <h2 class="text-5xl md:text-6xl font-bold font-serif text-baceco-dark-blue leading-tight">Maîtrisez le Bac Éco.<br>Plus simplement.</h2>
+                    <p class="mt-6 text-lg text-gray-600 max-w-2xl mx-auto">Votre tuteur IA spécialisé dans votre cours. Des explications claires et des exercices interactifs pour viser l'excellence.</p>
+                    <button data-navigate="page-login" class="mt-8 bg-baceco-gold text-baceco-dark-blue font-bold py-3 px-8 rounded-lg text-lg hover:scale-105 transition-transform">Commencer ma préparation gratuitement</button>
+                </section>
+
+                <!-- Spheres Section -->
+                <section class="mt-24">
+                    <h3 class="text-3xl font-bold font-serif text-baceco-dark-blue">Une préparation complète, trois matières maîtrisées.</h3>
+                    <div class="mt-12 grid md:grid-cols-3 gap-8 text-left">
+                        <div class="bg-white p-8 rounded-xl shadow-lg">
+                            <span class="text-5xl">📈</span>
+                            <h4 class="text-2xl font-bold font-serif text-baceco-dark-blue mt-4">Économie Générale & Statistiques</h4>
+                            <p class="mt-2 text-gray-600">Du PIB au taux de change, comprenez les concepts clés avec des explications tirées de votre support de cours "Le Bref en Economie".</p>
+                        </div>
+                        <div class="bg-white p-8 rounded-xl shadow-lg">
+                            <span class="text-5xl">📚</span>
+                            <h4 class="text-2xl font-bold font-serif text-baceco-dark-blue mt-4">Comptabilité Générale</h4>
+                            <p class="mt-2 text-gray-600">Maîtrisez les travaux d'inventaire, des amortissements aux provisions, en suivant la méthodologie de votre document de référence.</p>
+                        </div>
+                        <div class="bg-white p-8 rounded-xl shadow-lg">
+                            <span class="text-5xl">🏢</span>
+                            <h4 class="text-2xl font-bold font-serif text-baceco-dark-blue mt-4">Organisation des Entreprises</h4>
+                            <p class="mt-2 text-gray-600">Analysez les stratégies d'entreprise et la GRH en vous basant sur les résumés et les concepts clés de votre cours.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- NEW: About Section -->
+                <section class="mt-24 text-center bg-white p-16 rounded-xl shadow-lg">
+                    <h3 class="text-3xl font-bold font-serif text-baceco-dark-blue">Un projet créé par un élève, pour les élèves.</h3>
+                    <p class="mt-6 text-lg text-gray-600 max-w-3xl mx-auto">"Étant moi-même élève en 2ème année Bac Éco, j'ai créé StudyEcoWithOmar pour construire l'outil de révision dont j'avais besoin : un assistant intelligent qui connaît notre programme et qui peut aider à s'entraîner à tout moment." - Omar Oualiyouddine</p>
+                    <button data-navigate="page-about" class="mt-8 text-baceco-dark-blue font-bold py-3 px-8 rounded-lg text-lg hover:underline transition-transform">Découvrir l'histoire du projet &rarr;</button>
+                </section>
+                
+                 <!-- Final CTA Section -->
+                <section class="mt-24 bg-baceco-dark-blue text-white py-16 rounded-xl shadow-lg">
+                     <h3 class="text-4xl font-bold font-serif">Prêt à transformer vos révisions ?</h3>
+                     <button data-navigate="page-login" class="mt-8 bg-baceco-gold text-baceco-dark-blue font-bold py-3 px-8 rounded-lg text-lg hover:scale-105 transition-transform">Créer mon compte et viser la mention</button>
+                </section>
+                 <footer class="mt-24 text-center text-sm text-gray-500 py-6">
+                    <p>Powered by Omar Oualiyouddine</p>
+                </footer>
+            </main>
+        </div>
+
+        <!-- =================================================================== -->
+        <!--  2. ABOUT PAGE (/about)                                             -->
+        <!-- =================================================================== -->
+        <div id="page-about" class="page hidden">
+            <header class="bg-white shadow-sm p-4">
+                <nav class="container mx-auto flex justify-between items-center">
+                    <h1 class="text-2xl font-bold font-serif text-baceco-dark-blue">StudyEcoWithOmar</h1>
+                    <button data-navigate="page-landing" class="text-baceco-dark-blue hover:underline font-semibold">Retour à l'accueil</button>
+                </nav>
+            </header>
+            <main class="container mx-auto px-6 py-16">
+                <div class="bg-white p-10 rounded-xl shadow-lg max-w-3xl mx-auto">
+                    <h2 class="text-3xl font-bold font-serif text-baceco-dark-blue text-center">À Propos de StudyEcoWithOmar</h2>
+                    <div class="mt-8 space-y-4 text-gray-700 text-lg">
+                        <p>Cette plateforme a été créée et développée par <strong>Omar Oualiyouddine</strong>.</p>
+                        <p>"Étant moi-même élève en 2ème année Bac Sciences Économiques, mon premier objectif était de construire un outil personnalisé pour m'aider à approfondir ma propre compréhension des matières économiques. J'ai voulu créer un tuteur IA qui connaît notre programme sur le bout des doigts."</p>
+                        <p>"J'espère sincèrement que cet assistant pourra vous être aussi utile qu'à moi dans vos révisions et vous aider à viser l'excellence. Bon courage ! "</p>
+                        <p class="text-right mt-4">- Omar Oualiyouddine</p>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- =================================================================== -->
+        <!--  LOGIN PAGE (/login)                                                -->
+        <!-- =================================================================== -->
+        <div id="page-login" class="page hidden">
+            <div class="min-h-screen flex items-center justify-center">
+                <div class="bg-white p-10 rounded-xl shadow-2xl w-full max-w-md">
+                    <h2 class="text-3xl font-bold font-serif text-baceco-dark-blue text-center">Bienvenue sur StudyEcoWithOmar</h2>
+                    <p class="text-center text-gray-500 mt-2">Connectez-vous pour accéder à votre tableau de bord.</p>
+                    <form id="login-form" class="mt-8 space-y-6">
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700">Adresse e-mail</label>
+                            <input type="email" id="email" value="demo@studyecowithomar.xyz" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-baceco-gold focus:border-baceco-gold" required>
+                        </div>
+                        <div>
+                            <label for="password" class="block text-sm font-medium text-gray-700">Mot de passe</label>
+                            <input type="password" id="password" value="studyecowithomar" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-baceco-gold focus:border-baceco-gold" required>
+                        </div>
+                        <button type="submit" class="w-full bg-baceco-dark-blue text-white font-bold py-3 px-5 rounded-lg hover:bg-opacity-90 transition-colors">Se connecter</button>
+                    </form>
+                    <div id="login-error" class="hidden mt-4 text-center text-sm text-red-600"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- =================================================================== -->
+        <!--  3. DASHBOARD PAGE (/dashboard)                                     -->
+        <!-- =================================================================== -->
+        <div id="page-dashboard" class="page hidden">
+            <header class="bg-white shadow-sm p-4 flex justify-between items-center">
+                <h1 class="text-2xl font-bold font-serif text-baceco-dark-blue">StudyEcoWithOmar</h1>
+                <nav class="flex items-center gap-6">
+                    <a href="#" data-navigate="page-dashboard" class="font-semibold text-baceco-teal">Tableau de Bord</a>
+                    <a href="#" data-navigate="page-examen" class="text-gray-600 hover:text-baceco-teal">Mode Examen</a>
+                    <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center font-bold text-baceco-dark-blue" id="user-initial">O</div>
+                </nav>
+            </header>
+            
+            <main class="p-8 container mx-auto">
+                <div class="bg-white rounded-lg p-6 shadow-md">
+                    <h2 class="text-3xl font-bold font-serif text-baceco-dark-blue" id="welcome-banner">Bonjour Omar, prêt pour une nouvelle session de révision ?</h2>
+                </div>
+                
+                <div class="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                    <!-- Main content -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <h3 class="text-2xl font-bold font-serif text-baceco-dark-blue">Choisissez une matière</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div data-navigate="page-chat" data-sphere="Économie Générale" class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1 flex flex-col items-center text-center cursor-pointer">
+                                <span class="text-5xl">📈</span>
+                                <h3 class="text-lg font-bold font-serif text-baceco-dark-blue mt-4">Économie Générale</h3>
+                                <p class="text-sm text-gray-500 mt-2">Progression : 15%</p>
+                                <div class="w-full bg-gray-200 rounded-full h-2 mt-2"><div class="bg-baceco-gold h-2 rounded-full" style="width: 15%;"></div></div>
+                                <div class="mt-4 font-semibold text-baceco-teal hover:underline">Reprendre →</div>
+                            </div>
+                            <div data-navigate="page-chat" data-sphere="Comptabilité Générale" class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1 flex flex-col items-center text-center cursor-pointer">
+                                <span class="text-5xl">📚</span>
+                                <h3 class="text-lg font-bold font-serif text-baceco-dark-blue mt-4">Comptabilité Générale</h3>
+                                <p class="text-sm text-gray-500 mt-2">Progression : 0%</p>
+                                <div class="w-full bg-gray-200 rounded-full h-2 mt-2"><div class="bg-baceco-gold h-2 rounded-full" style="width: 0%;"></div></div>
+                                <div class="mt-4 font-semibold text-baceco-teal hover:underline">Commencer →</div>
+                            </div>
+                            <div data-navigate="page-chat" data-sphere="Organisation des Entreprises" class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1 flex flex-col items-center text-center cursor-pointer">
+                                <span class="text-5xl">🏢</span>
+                                <h3 class="text-lg font-bold font-serif text-baceco-dark-blue mt-4">Organisation des Entreprises</h3>
+                                <p class="text-sm text-gray-500 mt-2">Progression : 0%</p>
+                                <div class="w-full bg-gray-200 rounded-full h-2 mt-2"><div class="bg-baceco-gold h-2 rounded-full" style="width: 0%;"></div></div>
+                                <div class="mt-4 font-semibold text-baceco-teal hover:underline">Commencer →</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Sidebar -->
+                    <div class="space-y-8 lg:mt-12">
+                         <div class="bg-white p-6 rounded-xl shadow-md">
+                            <h4 class="font-bold font-serif text-baceco-dark-blue mb-4">Progression Globale</h4>
+                            <div class="flex items-center justify-center space-x-4">
+                                <div class="text-5xl font-bold text-baceco-green">5%</div>
+                                <div class="w-full bg-gray-200 rounded-full h-4"><div class="bg-baceco-green h-4 rounded-full" style="width: 5%;"></div></div>
+                            </div>
+                            <h4 class="font-bold font-serif text-baceco-dark-blue mt-6">Badges Débloqués</h4>
+                            <div class="mt-2 text-4xl" title="Bienvenue !">🎓</div>
+                         </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+        
+        <!-- =================================================================== -->
+        <!--  CHAT INTERFACE (/sphere/...)                                       -->
+        <!-- =================================================================== -->
+        <div id="page-chat" class="page hidden">
+            <div class="h-screen flex flex-col">
+                <header class="bg-white shadow-sm p-4 flex items-center space-x-4">
+                    <button data-navigate="page-dashboard" class="text-gray-500 hover:text-baceco-dark-blue">&larr; Retour</button>
+                    <h2 class="text-xl font-bold font-serif text-baceco-dark-blue" id="chat-title">Économie Générale</h2>
+                </header>
+
+                <main class="flex-1 overflow-y-auto p-6 space-y-6" id="chat-window">
+                    <!-- Chat messages will be appended here by JS -->
+                </main>
+
+                <footer class="p-4 bg-white border-t">
+                    <div id="quick-actions" class="flex justify-center mb-2 space-x-2">
+                        <button id="synth-question-btn" class="text-sm bg-baceco-light-bg border border-baceco-dark-blue text-baceco-dark-blue px-3 py-1 rounded-full hover:bg-gray-200 transition-colors">✨ Simuler une question de synthèse</button>
+                    </div>
+                    <div id="file-preview-container" class="hidden mb-2 p-2 bg-gray-100 rounded-lg text-sm text-gray-700 relative"></div>
+                    <form id="chat-form" class="flex items-center space-x-4">
+                        <label for="file-upload" class="cursor-pointer text-gray-500 hover:text-baceco-dark-blue">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                            </svg>
+                        </label>
+                        <input id="file-upload" type="file" class="hidden"/>
+                        <input type="text" id="chat-input" placeholder="Posez une question ou joignez un fichier..." class="flex-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-baceco-gold" autocomplete="off">
+                        <button type="submit" class="bg-baceco-dark-blue text-white font-bold py-2 px-6 rounded-lg hover:bg-opacity-90 transition-colors">Envoyer</button>
+                    </form>
+                </footer>
+            </div>
+        </div>
+        
+        <!-- =================================================================== -->
+        <!--  EXAM MODE PAGE (/mode-examen)                                      -->
+        <!-- =================================================================== -->
+        <div id="page-examen" class="page hidden">
+             <header class="bg-white shadow-sm p-4 flex justify-between items-center">
+                <h1 class="text-xl font-bold font-serif text-baceco-dark-blue">StudyEcoWithOmar</h1>
+                <nav class="flex items-center gap-6">
+                    <a href="#" data-navigate="page-dashboard" class="text-gray-600 hover:text-baceco-teal">Tableau de Bord</a>
+                    <a href="#" data-navigate="page-examen" class="font-semibold text-baceco-teal">Mode Examen</a>
+                    <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center font-bold text-baceco-dark-blue">O</div>
+                </nav>
+            </header>
+            <main class="p-8 container mx-auto text-center">
+                 <div class="bg-white rounded-lg p-10 shadow-lg max-w-2xl mx-auto">
+                    <h2 class="text-3xl font-bold font-serif text-baceco-dark-blue">Mode Examen Blanc</h2>
+                    <p class="mt-4 text-gray-600">Simulez les conditions réelles de l'examen. Vous aurez 3 heures pour répondre à une série de questions sur les trois matières. Prêt à tester vos connaissances ?</p>
+                    <div class="mt-8 text-5xl font-bold text-baceco-green">3:00:00</div>
+                    <button class="mt-8 w-full bg-baceco-green text-white font-bold py-3 rounded-lg hover:bg-opacity-90">Démarrer la simulation</button>
+                 </div>
+            </main>
+        </div>
+
+    </div>
+
+    <!-- ======================================================================= -->
+    <!--  JAVASCRIPT LOGIC for navigation and interaction                        -->
+    <!-- ======================================================================= -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            const state = { 
+                currentPage: 'page-landing', 
+                currentUser: null, 
+                currentSphere: null, 
+                chatHistory: [],
+                attachedFile: null,
+                currentQuiz: null,
+                currentQuestionIndex: 0,
+                score: 0
+            };
+
+            const pages = document.querySelectorAll('.page');
+            const navigationButtons = document.querySelectorAll('[data-navigate]');
+            const loginForm = document.getElementById('login-form');
+            const chatForm = document.getElementById('chat-form');
+            const chatInput = document.getElementById('chat-input');
+            const chatWindow = document.getElementById('chat-window');
+            const chatTitle = document.getElementById('chat-title');
+            const synthQuestionBtn = document.getElementById('synth-question-btn');
+            const fileUploadInput = document.getElementById('file-upload');
+            const filePreviewContainer = document.getElementById('file-preview-container');
+            const loginErrorDiv = document.getElementById('login-error');
+            
+            const GEMINI_API_KEY = "AIzaSyBPN3gFQ8iVZqGTOnWyDQBkdIXmX2jxvaA";
+            const GEMINI_MODEL = "gemini-2.5-pro";
+            const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
+            
+            // --- PDF CONTENT AS KNOWLEDGE BASE ---
+            const pdfKnowledge = `
+                --- DEBUT DE LA BASE DE CONNAISSANCE ---
+
+                --- PARTIE 1: COURS DÉTAILLÉ (Source: Le Bref en Economie) ---
+                ECONOMIE GENERALE
+                - Chapitre 1: le marché. Définition: lieu de rencontre de l'offre et la demande. Composantes: offre (fonction croissante du prix), demande (fonction décroissante du prix), prix d'équilibre. Types de marché: biens et services, travail, capitaux (monétaire et financier), change. Exceptions à la loi: intervention Etat, asymétrie d'information, effet Veblen, effet Giffen.
+                - Chapitre 2: le circuit économique. Définition: représentation de l'activité économique avec flux réels et monétaires entre les agents (Ménages, Sociétés non financières, Administrations publiques, Sociétés financières, Reste du monde). 
+                - Chapitre 3: les agrégats. Définition: grandeur synthétique. PIB: mesure la richesse créée. Calcul via 3 optiques (Production, Dépense, Revenu). PNB = PIB + Revenus extérieurs nets. Limites: ne mesure pas le bien-être, les inégalités, l'informel.
+                - Chapitre 4: l'insuffisance de la régulation par le marché. Dysfonctionnements: inflation (hausse durable des prix), chômage (déséquilibre sur le marché du travail). Concurrence imparfaite (monopole, oligopole).
+                - Chapitre 5: les instruments de l'intervention étatique. Politique économique: conjoncturelle (court terme) et structurelle (long terme). Politique de relance (Go) vs Politique de rigueur (Stop). Carré magique de Kaldor (croissance, emploi, prix, solde extérieur).
+                - Politique monétaire: menée par Bank Al-Maghrib. Instruments: taux directeur, réserves obligatoires, open market.
+                - Politique budgétaire: via le budget de l'Etat (dépenses publiques, impôts).
+                - Chapitre 6 & 7: les échanges extérieurs. Protectionnisme (barrières tarifaires et non tarifaires) vs Libre-échange. Mesure: Balance des paiements (balance commerciale, balance des invisibles).
+                - Chapitre 8: le développement. Croissance (quantitative, hausse du PIB) vs Développement (qualitatif, hausse du niveau de vie, mesuré par l'IDH). Sous-développement et stratégies.
+                COMPTABILITE GENERALE
+                - Travaux d'inventaire: régularisation des stocks, amortissements, provisions.
+                - Amortissement: constatation de la dépréciation irréversible d'une immobilisation. Mode linéaire (constant) et dégressif. VNA = VO - Cumul amortissements. Cession d'immobilisation.
+                - Provisions: constatation d'une dépréciation probable (non irréversible). Pour dépréciation d'actifs (stocks, créances, titres) ou pour risques et charges.
+                - Régularisation des charges et produits: charges constatées d'avance, charges à payer, etc.
+                ORGANISATION DES ENTREPRISES
+                - Chapitre 1: La stratégie d'entreprise. Fixation des objectifs et allocation des ressources. Finalités (économiques, sociales, sociétales).
+                - Chapitre 2: La planification stratégique. Diagnostic (interne: forces/faiblesses; externe: opportunités/menaces).
+                - Chapitre 3: Les options stratégiques. Spécialisation (un seul métier), Diversification (plusieurs métiers), Impartition (partenariat, sous-traitance, franchise), Intégration (fusion, absorption).
+                - Chapitre 4: La croissance de l'entreprise. Interne (création de capacités) vs Externe (acquisition, fusion). Concentration (horizontale, verticale, conglomérale).
+                - GRH: Gestion des Ressources Humaines. Recrutement, formation, gestion des carrières, rémunération. Théories des relations humaines (Taylor, Mayo, Maslow).
+
+                --- PARTIE 2: RÉSUMÉS OFFICIELS (Source: Résumés des Chapitres) ---
+                - Résumé Chapitre 1 Le marché: Définition: lieu de rencontre des offreurs et demandeurs. Types (objet, régime, nature). Caractéristiques (offre, demande, prix). Loi offre/demande. Conditions de CPP (Fluidité, Homogénéité, Atomicité, Mobilité, Transparence). TCN (Bon de trésor, Certificats de dépôt, Billet de trésorierie).
+                - Résumé Chapitre 2 Le circuit économique: Schéma des flux entre les agents (Ménages, SNF, SF, Admin pub, RDM).
+                - Résumé Chapitre 3 Les agrégats: Formules de calcul pour PIB (3 optiques), PNB, RNBD, ENB, FBCF, Demande intérieure/extérieure. Lectures types des agrégats.
+                - Résumé Chapitre 5 L'inflation: Définitions (inflation, désinflation, stagflation, déflation). Causes (demande, coûts, monnaie). Conséquences (négatives et positives). Mesure (IPC, Indices de Laspeyres, Paasche).
+                - Résumé Chapitre 6 Le chômage: Définitions (HCP, BIT). Causes (Classiques, Keynésiennes, Autres). Conséquences (économiques, sociales). Formules des taux (chômage, emploi, activité).
+                - Résumé Chapitre 7 Les politiques: Politique monétaire (Relance vs Rigueur), instruments (taux directeur, réserve obligatoire, open market). Politique budgétaire (Relance vs Rigueur), instruments (recettes fiscales, dépenses publiques), soldes budgétaires.
+                - Résumé Chapitre 8 Les échanges extérieurs: Protectionnisme (formes, avantages/limites) vs Libre-échange. Mesure via la Balance des paiements. Indicateurs (solde commercial, taux de couverture, termes de l'échange).
+                
+                --- PARTIE 3: EXAMENS NATIONAUX CORRIGÉS ---
+                - Tu as accès aux examens nationaux corrigés de 2010 à 2024 pour les Sciences Économiques.
+                --- FIN DE LA BASE DE CONNAISSANCE ---
+            `;
+
+            function navigateTo(pageId, data = {}) {
+                pages.forEach(page => page.classList.add('hidden'));
+                const targetPage = document.getElementById(pageId);
+                if (targetPage) {
+                    targetPage.classList.remove('hidden');
+                    state.currentPage = pageId;
+                    if (pageId === 'page-chat') {
+                        state.currentSphere = data.sphere;
+                        chatTitle.textContent = state.currentSphere;
+                        initializeChat();
+                    }
+                }
+            }
+
+            navigationButtons.forEach(button => button.addEventListener('click', (e) => {
+                e.preventDefault();
+                navigateTo(button.dataset.navigate, { sphere: button.dataset.sphere });
+            }));
+
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const emailInput = document.getElementById('email').value;
+                const passwordInput = document.getElementById('password').value;
+                const correctEmail = 'demo@studyecowithomar.xyz';
+                const correctPassword = 'studyecowithomar';
+
+                if (emailInput === correctEmail && passwordInput === correctPassword) {
+                    loginErrorDiv.classList.add('hidden');
+                    state.currentUser = { name: 'Omar', initial: 'O' };
+                    document.getElementById('welcome-banner').textContent = `Bonjour ${state.currentUser.name}, prêt pour une nouvelle session de révision ?`;
+                    document.getElementById('user-initial').textContent = state.currentUser.initial;
+                    navigateTo('page-dashboard');
+                } else {
+                    loginErrorDiv.textContent = 'Email ou mot de passe incorrect.';
+                    loginErrorDiv.classList.remove('hidden');
+                }
+            });
+            
+            function initializeChat() {
+                chatWindow.innerHTML = '';
+                const welcomeMessage = `Bonjour ! Je suis votre tuteur IA pour l'**${state.currentSphere}**. Je suis spécialisé dans le programme du Bac Économique marocain. Posez-moi n'importe quelle question.`;
+                addBotMessage(welcomeMessage);
+                state.chatHistory = [{ role: "model", parts: [{ text: welcomeMessage }] }];
+                state.currentQuiz = null; 
+                resetFileUpload();
+            }
+
+            chatForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const userMessage = chatInput.value.trim();
+                if (userMessage || state.attachedFile) {
+                    addUserMessage(userMessage);
+                    handleBotResponse(userMessage);
+                    chatInput.value = '';
+                    resetFileUpload();
+                }
+            });
+
+            synthQuestionBtn.addEventListener('click', () => {
+                const prompt = `Génère une question de synthèse sur le dernier sujet que nous avons abordé.`;
+                chatInput.value = prompt;
+                chatForm.dispatchEvent(new Event('submit'));
+            });
+
+            function addUserMessage(message) {
+                const messageEl = document.createElement('div');
+                messageEl.className = 'flex justify-end';
+                let fileHtml = '';
+                if(state.attachedFile && state.attachedFile.type.startsWith('image/')) {
+                    fileHtml = `<img src="${state.attachedFile.data}" class="w-48 rounded-lg mt-2" alt="Uploaded image">`;
+                } else if (state.attachedFile) {
+                    fileHtml = `<div class="mt-2 text-sm p-2 bg-baceco-dark-blue/80 rounded-lg">${state.attachedFile.name}</div>`;
+                }
+
+                messageEl.innerHTML = `<div class="bg-baceco-dark-blue text-white p-3 rounded-lg max-w-lg shadow-sm">${message}${fileHtml}</div>`;
+                chatWindow.appendChild(messageEl);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+            }
+            
+            // --- ROBUST MARKDOWN TO HTML PARSER ---
+            function markdownToHtml(text) {
+                // Process simple formatting first
+                let html = text
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" class="text-blue-600 hover:underline">$1</a>');
+
+                const lines = html.split('\n');
+                let finalHtml = '';
+                let inTable = false;
+
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    if (line.startsWith('|') && line.endsWith('|')) {
+                        // Check if this is a header row
+                        if (!inTable && i + 1 < lines.length && lines[i+1].trim().match(/^\|(\s*:?---:?\s*\|)+$/)) {
+                            inTable = true;
+                            finalHtml += '<table><thead><tr>';
+                            const headers = line.slice(1, -1).split('|');
+                            headers.forEach(header => {
+                                finalHtml += `<th>${header.trim()}</th>`;
+                            });
+                            finalHtml += '</tr></thead><tbody>';
+                            i++; // Skip the separator line
+                        } else if (inTable) {
+                            // This is a body row
+                            finalHtml += '<tr>';
+                            const cells = line.slice(1, -1).split('|');
+                            cells.forEach(cell => {
+                                finalHtml += `<td>${cell.trim()}</td>`;
+                            });
+                            finalHtml += '</tr>';
+                        } else {
+                           finalHtml += line + '<br>';
+                        }
+                    } else {
+                        if (inTable) {
+                            // End of the table
+                            inTable = false;
+                            finalHtml += '</tbody></table>';
+                        }
+                        finalHtml += line + '<br>';
+                    }
+                }
+                
+                if (inTable) { // Close table if it's the last element
+                    finalHtml += '</tbody></table>';
+                }
+
+                return finalHtml.replace(/<br>/g, '\n').replace(/\n/g, '<br>'); // Keep line breaks
+            }
+
+
+            function addBotMessage(messageContent, isTyping = false) {
+                 const messageEl = document.createElement('div');
+                 messageEl.className = 'flex justify-start';
+                 
+                 if (isTyping) {
+                     messageEl.id = 'typing-indicator';
+                     messageEl.innerHTML = `<div class="bg-gray-200 text-gray-700 p-3 rounded-lg max-w-lg inline-block shadow-sm"><span class="typing-dot">.</span><span class="typing-dot">.</span><span class="typing-dot">.</span></div>`;
+                 } else if (typeof messageContent === 'object' && messageContent.type === 'quiz_question') {
+                    const quiz = messageContent.content;
+                    const optionsHtml = quiz.options.map((option, index) => 
+                        `<button class="quiz-option w-full text-left p-3 mt-2 border-2 border-gray-300 rounded-lg hover:bg-gray-100" data-correct="${index === quiz.correctAnswer}" data-explanation="${quiz.explanation}">${option}</button>`
+                    ).join('');
+                    
+                    messageEl.innerHTML = `
+                        <div class="bg-gray-200 text-gray-800 p-4 rounded-lg max-w-lg shadow-sm w-full">
+                            <p class="text-sm text-gray-600 font-semibold">Question ${state.currentQuestionIndex + 1} / ${state.currentQuiz.questions.length}</p>
+                            <p class="font-bold mt-1">${quiz.question}</p>
+                            <div class="mt-2">${optionsHtml}</div>
+                        </div>`;
+                 } else if (typeof messageContent === 'object' && messageContent.type === 'video') {
+                    messageEl.innerHTML = `
+                        <div class="bg-gray-200 text-gray-800 p-3 rounded-lg max-w-lg shadow-sm">
+                            <p>Voici la vidéo que vous avez demandée sur **${messageContent.title}**.</p>
+                            <video controls class="w-full rounded-lg mt-2">
+                                <source src="${messageContent.url}" type="video/mp4">
+                                Votre navigateur ne supporte pas la lecture de vidéos.
+                            </video>
+                        </div>`;
+                 } else {
+                    let formattedMessage = markdownToHtml(messageContent);
+                    messageEl.innerHTML = `<div class="bot-message bg-gray-200 text-gray-800 p-3 rounded-lg max-w-lg shadow-sm">${formattedMessage}</div>`;
+                 }
+                chatWindow.appendChild(messageEl);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+            }
+            
+            // --- FILE UPLOAD LOGIC ---
+            fileUploadInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const base64String = event.target.result;
+                    state.attachedFile = {
+                        name: file.name,
+                        type: file.type,
+                        data: base64String,
+                    };
+                    showFilePreview();
+                };
+                reader.readAsDataURL(file);
+            });
+
+            function showFilePreview() {
+                if (!state.attachedFile) return;
+                let previewHtml = '';
+                if (state.attachedFile.type.startsWith('image/')) {
+                    previewHtml = `<img src="${state.attachedFile.data}" class="h-16 w-16 object-cover rounded-md" alt="Preview">`;
+                } else {
+                    previewHtml = `<span>${state.attachedFile.name}</span>`;
+                }
+                filePreviewContainer.innerHTML = `
+                    <div class="flex items-center space-x-2">
+                        ${previewHtml}
+                        <button id="remove-file-btn" class="text-red-500 hover:text-red-700">&times;</button>
+                    </div>`;
+                filePreviewContainer.classList.remove('hidden');
+
+                document.getElementById('remove-file-btn').addEventListener('click', resetFileUpload);
+            }
+
+            function resetFileUpload() {
+                state.attachedFile = null;
+                fileUploadInput.value = ''; // Reset the input field
+                filePreviewContainer.innerHTML = '';
+                filePreviewContainer.classList.add('hidden');
+            }
+
+
+            // --- INTERACTIVE QUIZ LOGIC ---
+            chatWindow.addEventListener('click', (e) => {
+                if (e.target.matches('.quiz-option')) {
+                    handleQuizAnswer(e.target);
+                }
+            });
+
+            function handleQuizAnswer(button) {
+                const isCorrect = button.dataset.correct === 'true';
+                if (isCorrect) {
+                    state.score++;
+                }
+                const explanation = button.dataset.explanation;
+                const parentContainer = button.parentElement;
+
+                parentContainer.querySelectorAll('.quiz-option').forEach(btn => {
+                    btn.disabled = true;
+                    btn.classList.remove('hover:bg-gray-100');
+                    if (btn.dataset.correct === 'true') {
+                        btn.classList.add('bg-green-200', 'border-green-500', 'font-bold');
+                    }
+                });
+
+                if (!isCorrect) {
+                    button.classList.add('bg-red-200', 'border-red-500');
+                }
+
+                setTimeout(() => {
+                    addBotMessage(`**Explication :** ${explanation}`);
+                    
+                    state.currentQuestionIndex++;
+                    if (state.currentQuestionIndex < state.currentQuiz.questions.length) {
+                        setTimeout(displayCurrentQuizQuestion, 1500);
+                    } else {
+                        setTimeout(showQuizResults, 1500);
+                    }
+                }, 1000);
+            }
+
+            function displayCurrentQuizQuestion() {
+                const questionData = state.currentQuiz.questions[state.currentQuestionIndex];
+                addBotMessage({ type: 'quiz_question', content: questionData });
+            }
+
+            function showQuizResults() {
+                addBotMessage(`**Quiz terminé !**<br>Votre score est de **${state.score} / ${state.currentQuiz.questions.length}**.<br><br>N'hésitez pas à demander un autre quiz ou à poser des questions sur les points que vous souhaitez améliorer.`);
+                state.currentQuiz = null; // Reset quiz state
+            }
+
+
+            async function handleBotResponse(userInput) {
+                addBotMessage('', true); 
+
+                const systemInstruction = `Tu es "StudyEcoWithOmar", un tuteur IA expert pour le Bac Économique marocain.
+                - Ta personnalité est amicale. Tu réponds aux salutations et analyses le contexte de la conversation.
+                - Règle FONDAMENTALE : Pour toute question académique, ta **seule et unique source de vérité est le document de cours fourni dans le contexte**. 
+                - **Si l'utilisateur envoie un fichier ou une image**, tu dois l'analyser et répondre à sa question en te basant sur ce fichier.
+                - **Si l'utilisateur demande un "résumé"**: Utilise la section "RÉSUMÉS OFFICIELS" et restitue le résumé de manière fidèle.
+                - **Pour toute autre question académique**: Utilise la section "COURS DÉTAILLÉ" pour fournir une réponse **complète et exhaustive**. Ne résume JAMAIS l'information sauf si demandé explicitement.
+                - **Pour les questions d'actualité** (ex: "quel est le taux de chômage actuel au Maroc ?") qui ne sont pas dans le document, utilise l'outil de recherche Google. Cite toujours ta source.
+                - **Règle Critique pour les Liens/PDF**: Si l'utilisateur demande un "lien" ou "PDF" pour un examen, tu dois OBLIGATOIREMENT utiliser l'outil de recherche Google pour trouver un lien direct et fonctionnel.
+                - **Règle Critique pour les Vidéos**: Si la question contient "vidéo", tu dois OBLIGATOIREMENT utiliser l'outil de recherche Google pour trouver un lien YouTube pertinent et présente-le sous forme de lien cliquable formaté en markdown [Titre](lien).
+                - **Fonctionnalité Quiz Avancée**: Si un utilisateur demande un "quiz complet" ou un quiz sur un "chapitre entier", génère un quiz de 10 à 15 questions. Ta réponse doit être **uniquement et exclusivement un objet JSON valide**: \`{"type": "full_quiz", "questions": [{"question": "...", "options": ["...", "...", "..."], "correctAnswer": 0, "explanation": "..."}, ...]}\`.
+                - **Fonctionnalité "Question de Synthèse" ✨**: Si l'utilisateur demande une "question de synthèse", crée une question de type examen national et fournis un plan de réponse détaillé (Introduction, Développement I.A/B, II.A/B, Conclusion).
+                - La matière actuelle est : ${state.currentSphere}.`;
+                
+                const userParts = [];
+                if (userInput) {
+                    const enrichedUserInput = `CONTEXTE DU COURS : ###\n${pdfKnowledge}\n###\n\nQUESTION DE L'UTILISATEUR (en tenant compte de l'historique de la conversation) : "${userInput}"`;
+                    userParts.push({ text: enrichedUserInput });
+                }
+
+                if (state.attachedFile) {
+                    userParts.push({
+                        inlineData: {
+                            mimeType: state.attachedFile.type,
+                            data: state.attachedFile.data.split(',')[1] // Remove the base64 prefix
+                        }
+                    });
+                }
+                
+                const currentHistory = state.chatHistory.map(h => ({ role: h.role, parts: h.parts }));
+                currentHistory.push({ role: "user", parts: userParts });
+
+                const payload = {
+                    contents: currentHistory,
+                    systemInstruction: {
+                        parts: [{ text: systemInstruction }]
+                    },
+                    tools: [{ "google_search": {} }],
+                    generationConfig: { temperature: 0.7, topK: 1, topP: 1, maxOutputTokens: 8192 },
+                };
+                
+                state.chatHistory.push({ role: "user", parts: userParts });
+
+                try {
+                    const response = await fetch(GEMINI_API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error?.message || response.statusText);
+                    }
+                    
+                    const data = await response.json();
+                    
+                    document.getElementById('typing-indicator')?.remove();
+
+                    if (!data.candidates || data.candidates.length === 0 || !data.candidates[0].content) {
+                        if (data.promptFeedback && data.promptFeedback.blockReason) {
+                            throw new Error(`Requête bloquée pour raison de sécurité : ${data.promptFeedback.blockReason}`);
+                        }
+                         throw new Error("Réponse de l'API invalide.");
+                    }
+                    
+                    const botResponseText = data.candidates[0].content.parts[0].text;
+                    state.chatHistory.push({ role: "model", parts: [{ text: botResponseText }] });
+                    
+                    try {
+                        const cleanedJsonString = botResponseText.replace(/^```json\n|```$/g, '');
+                        const parsedObject = JSON.parse(cleanedJsonString);
+
+                        if (parsedObject.type === 'full_quiz' && Array.isArray(parsedObject.questions)) {
+                            state.currentQuiz = parsedObject;
+                            state.currentQuestionIndex = 0;
+                            state.score = 0;
+                            addBotMessage(`Excellent ! Commençons ce quiz de ${state.currentQuiz.questions.length} questions.`);
+                            setTimeout(displayCurrentQuizQuestion, 1000);
+                        } else if (parsedObject.type === 'video' && parsedObject.url) {
+                            addBotMessage(parsedObject);
+                        }
+                        else {
+                            addBotMessage(botResponseText);
+                        }
+                    } catch (e) {
+                        addBotMessage(botResponseText);
+                    }
+
+                } catch (error) {
+                    console.error("Error calling Gemini API:", error);
+                    document.getElementById('typing-indicator')?.remove();
+                    addBotMessage(`Désolé, une erreur est survenue.<br><strong>Erreur :</strong> ${error.message}<br>Veuillez vérifier votre clé API.`);
+                }
+            }
+
+            navigateTo('page-landing');
+        });
+    </script>
+</body>
+</html>
+
